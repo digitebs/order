@@ -5,25 +5,22 @@ use hyper::rt::{self, Future, Stream};
 use hyper::header::HeaderValue;
 use hyper::{Client, Body, Request, Response, Server, Method, StatusCode, Uri};
 use serde_json::json;
-use std::io::{self, Write};
 use std::time::Duration;
 use std::thread;
 use rand::Rng;
 
 fn main() {
     let secs = Duration::from_secs(1);
-    //let url = "shit".parse::<hyper::Uri>().unwrap();
-
     let mut children = vec![];
 
-    let secs = Duration::from_secs(1);
+    let secs = Duration::from_millis(500);
     loop {
         for i in 0..10 {
             // Spin up another thread
             children.push(thread::spawn(move || {
                 let mut rng = rand::thread_rng();
                 let t = rng.gen_range(0, 100);
-                let i = rng.gen_range(0, 100);
+                let i = rng.gen_range(0, 50);
                 let op = rng.gen_range(0, 3);
                 let r: Request<Body> = match op {
                     0 => add(t, i),
@@ -37,10 +34,10 @@ fn main() {
         thread::sleep(secs);
     }
 
-    for child in children {
+    /* for child in children {
         // Wait for the thread to finish. Returns a result.
         let _ = child.join();
-    }
+    }*/
 }
 
 
@@ -92,7 +89,7 @@ fn fetch_url(req: Request<Body>) -> impl Future<Item=(), Error=()> {
         .map(|body| {
             let s = std::str::from_utf8(&body)
                 .expect("httpbin sends utf-8 JSON");
-            println!("body: {}", s);
+            println!("body {}", s);
         })
         // If there was an error, let the user know...
         .map_err(|err| {

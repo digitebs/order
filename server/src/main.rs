@@ -26,7 +26,7 @@ fn make_order(req: Request<Body>) -> BoxFut {
         (&Method::DELETE, "/order") => {
             let res  = req.into_body().concat2().map(move |chunk| {
                 let o: Order = serde_json::from_slice::<Order>(&chunk).unwrap();
-                order::delete(o.table,o.item);
+                order::remove(o.table, o.item);
                 *response.status_mut() = StatusCode::NO_CONTENT;
                 response
             });

@@ -28,9 +28,9 @@ mod tests {
         thread::sleep(secs);
         assert_eq!(add_time(1, 2, 1).item, 2);
         thread::sleep(secs);
-        delete(1, 1);
+        remove(1, 1);
         assert_eq!(get(1).len(), 1);
-        delete(1, 2);
+        remove(1, 2);
         assert_eq!(get(1).len(), 0);
     }
 }
@@ -61,10 +61,11 @@ pub fn get(t: i32) -> Vec<Order> {
     if !m.contains_key(&t) {
         return vec![];
     }
+    println!("Query for {:?}.", m[&t]);
     return m[&t].to_owned();
 }
 
-pub fn delete(t: i32, i: i32) {
+pub fn remove(t: i32, i: i32) {
     let mut m = HASHMAP.lock().unwrap();
     if !m.contains_key(&t) {
         return;
