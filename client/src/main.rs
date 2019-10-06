@@ -16,21 +16,25 @@ fn main() {
 
     let mut children = vec![];
 
-    for j in 0..10 {
-        // Spin up another thread
-        children.push(thread::spawn(move || {
-            let mut rng = rand::thread_rng();
-            let t = rng.gen_range(0, 100);
-            let i = rng.gen_range(0, 100);
-            let op = rng.gen_range(0, 3);
-            let r: Request<Body> = match op {
-                0 => add(t, i),
-                1 => get(t),
-                2 => delete(t, i),
-                _ => Request::new(Body::empty())
-            };
-            rt::run(fetch_url(r));
-        }));
+    let secs = Duration::from_secs(1);
+    loop {
+        for i in 0..10 {
+            // Spin up another thread
+            children.push(thread::spawn(move || {
+                let mut rng = rand::thread_rng();
+                let t = rng.gen_range(0, 100);
+                let i = rng.gen_range(0, 100);
+                let op = rng.gen_range(0, 3);
+                let r: Request<Body> = match op {
+                    0 => add(t, i),
+                    1 => get(t),
+                    2 => delete(t, i),
+                    _ => Request::new(Body::empty())
+                };
+                rt::run(fetch_url(r));
+            }));
+        }
+        thread::sleep(secs);
     }
 
     for child in children {

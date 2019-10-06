@@ -1,19 +1,28 @@
 ##### Intro
 There is no database involve in this application, it uses in memory global 
 hashmap to store information on the server. All data manipulation is done in the 
-in memory map.
+data structure on local memory map.
+
+###### Server
+```
+.
+├── server
+├── lib
+├── client
+└── ...
+```
 
 ##### Prerequisites
 - rustup
 
 ##### To boot server
-
-cargo run --bin server
+`cargo run --bin server`
 
 
 ##### To start client
+The client will just loop forever and fires 10 simultaneous request every seconds
 
-cargo run --bin client
+`cargo run --bin client`
 
 ##### Sample curl
 ```
